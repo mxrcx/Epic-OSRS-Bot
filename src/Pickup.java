@@ -10,6 +10,11 @@ import org.rspeer.script.task.Task;
 import static org.rspeer.runetek.api.commons.Time.sleep;
 
 public class Pickup extends Task {
+    final String[] validPickableTypes;
+
+    public Pickup(String[] validPickableTypes){
+        this.validPickableTypes = validPickableTypes;
+    }
 
     /**
      * If there is a Pickable next to the Player, the Player is not ion a Combat,
@@ -18,9 +23,22 @@ public class Pickup extends Task {
     @Override
     public boolean validate() {
 
-        return Pickables.getNearest(nearest -> nearest.isPositionInteractable() && (nearest.getName().equals("Cowhide") || nearest.getName().equals("Raw beef") || nearest.getName().equals("Bones"))) != null
+        return Pickables.getNearest(nearest -> nearest.isPositionInteractable() && checkPickableTypes(nearest)) != null
                 && Inventory.getFreeSlots() > 0
                 && Players.getLocal().getTarget() == null;
+    }
+
+    /**
+     * Check if the type of the nearest Pickable equals one of the valid types
+     */
+    private boolean checkPickableTypes(Pickable pickable){
+        for (String type : validPickableTypes) {
+            if (pickable.getName().equals(type)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
@@ -30,9 +48,10 @@ public class Pickup extends Task {
     public int execute() {
         Pickable item = Pickables.getNearest(nearest -> nearest.isPositionInteractable() && (nearest.getName().equals("Cowhide") || nearest.getName().equals("Raw beef") || nearest.getName().equals("Bones")));
 
+        // Perform the click action in the game
         item.interact("Take");
 
-        sleep(Random.mid(800, 1200));
+        sleep(Random.mid(1000, 2000));
 
         return 0;
     }

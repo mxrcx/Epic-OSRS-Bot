@@ -26,9 +26,10 @@ public class Restore extends Task {
     public int execute() {
         final Interactable bread = Inventory.getFirst("Bread");
 
+        // Perform the click action in the game
         bread.interact("Eat");
 
-        sleep(Random.mid(800, 1200));
+        sleep(Random.mid(1000, 2000));
 
         return 0;
     }
