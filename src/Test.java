@@ -9,33 +9,12 @@ import org.rspeer.ui.Log;
 public class Test extends TaskScript {
     final String opponentType = "Chicken";
     final String[] validPickableTypes = new String[]{"Raw chicken", "Bones", "Feather"};
-    boolean fightIsOver = false;
 
     /**
-     * Start a Fight, Pickup or Restore Task depending on Player's condition
+     * Start a Fight, Pickup and Restore Task
      */
     @Override
     public void onStart() {
-
-        if(!fightIsOver) {
-            if(Players.getLocal().getHealthPercent() >= 60) {
-                Log.info("fight");
-
-                submit(new Fight(opponentType, validPickableTypes));
-                fightIsOver = true;
-            }
-            else {
-                Log.info("restore");
-
-                submit(new Restore());
-            }
-        } else {
-            Log.info("pickup");
-
-            submit( new Pickup(validPickableTypes));
-            fightIsOver = false;
-        }
-
-        // submit(new FightCow(), new Pickup(), new Restore());
+        submit(new Fight(opponentType, validPickableTypes), new Pickup(validPickableTypes), new Restore());
     }
 }

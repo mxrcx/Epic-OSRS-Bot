@@ -6,12 +6,16 @@ import org.rspeer.runetek.api.component.tab.Inventory;
 import org.rspeer.runetek.api.scene.Pickables;
 import org.rspeer.runetek.api.scene.Players;
 import org.rspeer.script.task.Task;
+import org.rspeer.ui.Log;
 
 import static org.rspeer.runetek.api.commons.Time.sleep;
 
 public class Pickup extends Task {
     final String[] validPickableTypes;
 
+    /**
+     * Constructor
+     */
     public Pickup(String[] validPickableTypes){
         this.validPickableTypes = validPickableTypes;
     }
@@ -23,7 +27,7 @@ public class Pickup extends Task {
     @Override
     public boolean validate() {
 
-        return Pickables.getNearest(nearest -> nearest.isPositionInteractable() && checkPickableTypes(nearest)) != null
+        return Pickables.getNearest(nearest -> nearest.isPositionInteractable() && nearest.distance() < 5 && checkPickableTypes(nearest)) != null
                 && Inventory.getFreeSlots() > 0
                 && Players.getLocal().getTarget() == null;
     }
@@ -46,13 +50,15 @@ public class Pickup extends Task {
      */
     @Override
     public int execute() {
-        Pickable item = Pickables.getNearest(nearest -> nearest.isPositionInteractable() && (nearest.getName().equals("Cowhide") || nearest.getName().equals("Raw beef") || nearest.getName().equals("Bones")));
+
+        Pickable item = Pickables.getNearest(nearest -> nearest.isPositionInteractable() && checkPickableTypes(nearest));
+        Log.info("pickup: " + item);
 
         // Perform the click action in the game
         item.interact("Take");
 
         sleep(Random.mid(1000, 2000));
 
-        return 0;
+        return 100;
     }
 }

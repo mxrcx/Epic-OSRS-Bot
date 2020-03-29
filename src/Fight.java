@@ -3,6 +3,7 @@ import org.rspeer.runetek.adapter.scene.Npc;
 import org.rspeer.runetek.adapter.scene.Pickable;
 import org.rspeer.runetek.api.commons.Time;
 import org.rspeer.runetek.api.commons.math.Random;
+import org.rspeer.runetek.api.component.tab.Inventory;
 import org.rspeer.runetek.api.input.Keyboard;
 import org.rspeer.runetek.api.scene.Npcs;
 import org.rspeer.runetek.api.scene.Pickables;
@@ -17,6 +18,9 @@ public class Fight extends Task {
     final String opponentType;
     final String[] validPickableTypes;
 
+    /**
+     * Constructor
+     */
     public Fight(String opponentType, String[] validPickableTypes) {
         this.opponentType = opponentType;
         this.validPickableTypes = validPickableTypes;
@@ -32,7 +36,7 @@ public class Fight extends Task {
         return Npcs.getNearest(nearest -> nearest.isPositionInteractable() && nearest.getName().equals(opponentType) && nearest.getTarget() == null) != null
                 && Players.getLocal().getTarget() == null
                 && Players.getLocal().getHealthPercent() >= 60
-                && Pickables.getNearest(nearest -> checkPickableTypes(nearest) && nearest.distance() < 50) == null; // check if a Pickable is available (fight has ended)
+                && ((Inventory.getFreeSlots() < 1) || (Pickables.getNearest(nearest -> nearest.isPositionInteractable() && nearest.distance() < 5 && checkPickableTypes(nearest)) == null)); // check if a Pickable is available (fight has ended)
     }
 
     /**
@@ -53,7 +57,9 @@ public class Fight extends Task {
      */
     @Override
     public int execute() {
+
         final Npc opponent = Npcs.getNearest(nearest -> nearest.isPositionInteractable() && nearest.getName().equals(opponentType) && nearest.getTarget() == null);
+        Log.info("fight: " + opponent);
 
         // Perform the click action in the game
         opponent.interact("Attack");
@@ -61,8 +67,6 @@ public class Fight extends Task {
         // Check if enemy is dead by checking his target
         Time.sleepUntil(() -> opponent.getTarget() == null, Random.mid(1000, 2000));
 
-        Log.info("opponent dead");
-
-        return 0;
+        return 100;
     }
 }

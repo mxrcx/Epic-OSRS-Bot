@@ -4,6 +4,7 @@ import org.rspeer.runetek.api.component.tab.Inventory;
 import org.rspeer.runetek.api.scene.Pickables;
 import org.rspeer.runetek.api.scene.Players;
 import org.rspeer.script.task.Task;
+import org.rspeer.ui.Log;
 
 import static org.rspeer.runetek.api.commons.Time.sleep;
 
@@ -24,13 +25,15 @@ public class Restore extends Task {
      */
     @Override
     public int execute() {
+
         final Interactable bread = Inventory.getFirst("Bread");
+        Log.info("restore: " + bread);
 
         // Perform the click action in the game
         bread.interact("Eat");
 
         sleep(Random.mid(1000, 2000));
 
-        return 0;
+        return 100;
     }
 }
