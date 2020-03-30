@@ -67,6 +67,6 @@ public class Fight extends Task {
         // Check if enemy is dead by checking his target
         Time.sleepUntil(() -> opponent.getTarget() == null, Random.mid(1000, 2000));
 
-        return 100;
+        return Random.mid(500, 1000);
     }
 }

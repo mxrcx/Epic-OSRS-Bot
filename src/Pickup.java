@@ -1,6 +1,4 @@
-import org.rspeer.runetek.adapter.Interactable;
 import org.rspeer.runetek.adapter.scene.Pickable;
-import org.rspeer.runetek.api.commons.Time;
 import org.rspeer.runetek.api.commons.math.Random;
 import org.rspeer.runetek.api.component.tab.Inventory;
 import org.rspeer.runetek.api.scene.Pickables;
@@ -29,6 +27,7 @@ public class Pickup extends Task {
 
         return Pickables.getNearest(nearest -> nearest.isPositionInteractable() && nearest.distance() < 5 && checkPickableTypes(nearest)) != null
                 && Inventory.getFreeSlots() > 0
+                && Players.getLocal().getHealthPercent() >= 60
                 && Players.getLocal().getTarget() == null;
     }
 
@@ -59,6 +58,6 @@ public class Pickup extends Task {
 
         sleep(Random.mid(1000, 2000));
 
-        return 100;
+        return Random.mid(500, 1000);
     }
 }
