@@ -21,9 +21,11 @@ public class Fight extends Task {
     /**
      * Constructor
      */
-    public Fight(String opponentType, String[] validPickableTypes) {
-        this.opponentType = opponentType;
-        this.validPickableTypes = validPickableTypes;
+    public Fight(Opponent[] opponents) {
+        Opponent nextOpponent = opponents[Random.nextInt(opponents.length)];
+        Log.info("Next opponent: " + nextOpponent);
+        this.opponentType = nextOpponent.getOpponentType();
+        this.validPickableTypes = nextOpponent.getValidPickableTypes();
     }
 
     /**

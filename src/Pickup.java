@@ -14,8 +14,10 @@ public class Pickup extends Task {
     /**
      * Constructor
      */
-    public Pickup(String[] validPickableTypes){
-        this.validPickableTypes = validPickableTypes;
+    public Pickup(Opponent[] opponents){
+        Opponent lastOpponent = opponents[Random.nextInt(opponents.length)];
+        Log.info("Last opponent: " + lastOpponent);
+        this.validPickableTypes = lastOpponent.getValidPickableTypes();
     }
 
     /**

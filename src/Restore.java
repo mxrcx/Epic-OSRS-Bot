@@ -16,11 +16,12 @@ public class Restore extends Task {
     @Override
     public boolean validate() {
 
-        return Players.getLocal().getHealthPercent() < 60 && Inventory.contains(item -> item.containsAction("Eat"));
+        return Players.getLocal().getHealthPercent() < 60
+                && Inventory.contains(item -> item.containsAction("Eat"));
     }
 
     /**
-     * Restore Health of Player by eating the first Bread in the Inventory
+     * Restore Health of Player by eating the first eatable item in the Inventory
      */
     @Override
     public int execute() {
