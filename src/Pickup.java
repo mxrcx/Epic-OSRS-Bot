@@ -1,4 +1,5 @@
 import org.rspeer.runetek.adapter.scene.Pickable;
+import org.rspeer.runetek.api.commons.Time;
 import org.rspeer.runetek.api.commons.math.Random;
 import org.rspeer.runetek.api.component.tab.Inventory;
 import org.rspeer.runetek.api.scene.Pickables;
@@ -51,15 +52,17 @@ public class Pickup extends Task {
      */
     @Override
     public int execute() {
+        final Pickable item = Pickables.getNearest(nearest -> nearest.isPositionInteractable() && checkPickableTypes(nearest));
+        final int remainingSlots = Inventory.getFreeSlots();
 
-        Pickable item = Pickables.getNearest(nearest -> nearest.isPositionInteractable() && checkPickableTypes(nearest));
         Log.info("pickup: " + item);
 
         // Perform the click action in the game
-        item.interact("Take");
+        if(item != null) {
+            item.interact("Take");
+            Time.sleepUntil(() -> Inventory.getFreeSlots() != remainingSlots, Random.mid(4000, 5000));
+        }
 
-        sleep(Random.mid(1000, 2000));
-
-        return Random.mid(500, 1000);
+        return Random.mid(800, 1300);
     }
 }

@@ -1,4 +1,5 @@
 import org.rspeer.runetek.adapter.Interactable;
+import org.rspeer.runetek.api.commons.Time;
 import org.rspeer.runetek.api.commons.math.Random;
 import org.rspeer.runetek.api.component.tab.Inventory;
 import org.rspeer.runetek.api.scene.Players;
@@ -25,15 +26,17 @@ public class Restore extends Task {
      */
     @Override
     public int execute() {
-
         final Interactable eatableItem = Inventory.getFirst(item -> item.containsAction("Eat"));
+        final int remainingSlots = Inventory.getFreeSlots();
+
         Log.info("restore: " + eatableItem);
 
-        // Perform the click action in the game
-        eatableItem.interact("Eat");
+        // Perform the click action in the game, wait until Health restored
+        if(eatableItem != null) {
+            eatableItem.interact("Eat");
+            Time.sleepUntil(() -> Inventory.getFreeSlots() != remainingSlots, Random.mid(4000, 5000));
+        }
 
-        sleep(Random.mid(1000, 2000));
-
-        return Random.mid(500, 1000);
+        return Random.mid(800, 1300);
     }
 }

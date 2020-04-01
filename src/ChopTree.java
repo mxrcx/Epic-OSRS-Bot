@@ -5,11 +5,12 @@ import org.rspeer.runetek.api.component.tab.Inventory;
 import org.rspeer.runetek.api.scene.Players;
 import org.rspeer.runetek.api.scene.SceneObjects;
 import org.rspeer.script.task.Task;
+import org.rspeer.ui.Log;
 
 public class ChopTree extends Task {
 
     /**
-     * If Inventory contains no logs, chop a tree
+     * If Inventory contains no Logs, chop down Tree
      */
     @Override
     public boolean validate() {
@@ -17,17 +18,25 @@ public class ChopTree extends Task {
         return Inventory.contains("Logs") == false
                 && Inventory.contains("Bronze axe")
                 && Players.getLocal().getTarget() == null
-                && SceneObjects.getNearest("Tree") != null;
+                && SceneObjects.getNearest(nearest -> nearest.getName().equals("Tree") && nearest.isPositionInteractable()) != null;
     }
 
+    /**
+     * Chop down Tree
+     */
     @Override
     public int execute() {
+        Log.info("chop down tree");
 
-        SceneObjects.getNearest("Tree").interact("Chop down");
+        final SceneObject tree = SceneObjects.getNearest(nearest -> nearest.getName().equals("Tree") && nearest.isPositionInteractable());
+        final int remainingSlots = Inventory.getFreeSlots();
 
         // Wait until Tree is chopped down
-        Time.sleepUntil(() -> Inventory.contains("Logs"), Random.mid(1000, 2000));
+        if(tree != null) {
+            tree.interact("Chop down");
+            Time.sleepUntil(() -> Inventory.getFreeSlots() != remainingSlots, Random.mid(4000, 5000));
+        }
 
-        return Random.mid(500, 1000);
+        return Random.mid(800, 1300);
     }
 }

@@ -32,7 +32,7 @@ public class Cook extends Task {
     @Override
     public int execute() {
 
-        Log.info("cook: ");
+        Log.info("cook");
 
         // Light up camp fire
         Inventory.getFirst("Tinderbox").interact("Use");
@@ -42,12 +42,16 @@ public class Cook extends Task {
         Time.sleepUntil(() -> SceneObjects.getNearest("Fire") != null, Random.mid(10000, 20000));
 
         // Cook raw item
-        Inventory.getFirst(item -> item.getName().equals("Raw chicken") || item.getName().equals("Raw beef")).interact("Use");
-        SceneObjects.getNearest("Fire").interact("Use");
+        SceneObject fire = SceneObjects.getNearest(nearest -> nearest.getName().equals("Fire") && nearest.isPositionInteractable());
 
-        // Wait until Inventory contains eatable (cooked) Item
-        Time.sleepUntil(() -> Inventory.contains(item -> item.containsAction("Eat")), Random.mid(1000, 2000));
+        if(fire != null){
+            Inventory.getFirst(item -> item.getName().equals("Raw chicken") || item.getName().equals("Raw beef")).interact("Use");
+            SceneObjects.getNearest("Fire").interact("Use");
 
-        return Random.mid(500, 1000);
+            // Wait until Inventory contains eatable (cooked) Item
+            Time.sleepUntil(() -> Inventory.contains(item -> item.containsAction("Eat")), Random.mid(4000, 5000));
+        }
+
+        return Random.mid(800, 1300);
     }
 }
