@@ -7,17 +7,16 @@ import org.rspeer.script.task.TaskScript;
 public class Main extends TaskScript {
 
     /**
-     * Create all opponents and their loot as valid pickable items
+     * Create all opponents and the valid pickable items
      */
-    final Opponent chicken = new Opponent("Chicken", new String[]{"Raw chicken", "Bones", "Feather"});
-    final Opponent cow = new Opponent("Cow", new String[]{"Raw beef", "Bones", "Cowhide"});
-    final Opponent[] opponents = new Opponent[]{chicken, cow};
+    final String[] opponents = new String[]{"Goblin", "Dwarf"};
+    final String[] pickables = new String[]{"Bones", "Hammer", "Bronze pickaxe", "Bronze sq shield", "Chef's hat", "Water rune", "Earth rune", "Fire rune", "Body rune", "Coins", "Goblin mail"};
 
     /**
      * Start a Fight, Pickup, ChopTree, Cook and Restore Task
      */
     @Override
     public void onStart() {
-        submit(new Fight(opponents), new Pickup(opponents), new ChopTree(), new Cook(), new Restore());
+        submit(new Fight(opponents, pickables), new Pickup(pickables), new ChopTree(), new Cook(), new Restore());
     }
 }

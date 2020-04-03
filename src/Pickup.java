@@ -10,15 +10,13 @@ import org.rspeer.ui.Log;
 import static org.rspeer.runetek.api.commons.Time.sleep;
 
 public class Pickup extends Task {
-    final String[] validPickableTypes;
+    final String[] pickables;
 
     /**
      * Constructor
      */
-    public Pickup(Opponent[] opponents){
-        Opponent lastOpponent = opponents[Random.nextInt(opponents.length)];
-        Log.info("Last opponent: " + lastOpponent);
-        this.validPickableTypes = lastOpponent.getValidPickableTypes();
+    public Pickup(String[] pickables){
+       this.pickables = pickables;
     }
 
     /**
@@ -37,9 +35,9 @@ public class Pickup extends Task {
     /**
      * Check if the type of the nearest Pickable equals one of the valid types
      */
-    private boolean checkPickableTypes(Pickable pickable){
-        for (String type : validPickableTypes) {
-            if (pickable.getName().equals(type)) {
+    private boolean checkPickableTypes(Pickable nearest){
+        for (String type : pickables) {
+            if (nearest.getName().equals(type)) {
                 return true;
             }
         }
